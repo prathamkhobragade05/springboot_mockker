@@ -43,7 +43,7 @@ public class QuestionService {
 				if(questionRepo.existsByQuestion(q.getQuestion())) {
 					continue;
 				}else {
-					savedQuestions.add(questionRepo.save(q));	
+					savedQuestions.add(questionRepo.save(q));
 				}
 			}catch(Exception e){
 

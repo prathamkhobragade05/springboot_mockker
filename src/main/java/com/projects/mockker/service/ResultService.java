@@ -25,7 +25,7 @@ public class ResultService {
 
 
 		    if (results.size() > 10) {
-		        List<ResultModel> toDelete = results.subList(5, results.size());
+		        List<ResultModel> toDelete = results.subList(10, results.size());
 		        resultRepo.deleteAll(toDelete);
 		    }
 	    }catch(Exception e) {

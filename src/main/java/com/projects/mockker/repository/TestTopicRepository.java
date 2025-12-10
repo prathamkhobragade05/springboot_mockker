@@ -11,5 +11,7 @@ import com.projects.mockker.model.TestTopicModel;
 public interface TestTopicRepository extends JpaRepository<TestTopicModel, Long>{
 
 	List<TestTopicModel> findByTest(Long test);
+
+	boolean existsByTopic(String topic);
 	
 }

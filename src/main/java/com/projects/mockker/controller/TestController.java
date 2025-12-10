@@ -37,7 +37,6 @@ public class TestController {
     	}catch(Exception e) {
     		return ResponseEntity.badRequest().body(e.getMessage());
     	}
-    	
     }
 	
 //----------------------topics
@@ -52,7 +51,23 @@ public class TestController {
     	}else {
           return ResponseEntity.ok(topics);
     	}
-
     }
+    
+	@PostMapping("/topic")																//---------add new test
+    public TestTopicModel addtopic(@RequestBody TestTopicModel topic) {
+        return testService.addTopic(topic);
+    }
+    
+    @PostMapping("/topic/")																//---------add multiple new tests
+    public ResponseEntity<?> addTopics(@RequestBody List<TestTopicModel> topics){
+    	try {
+    		List<TestTopicModel> addedTests= testService.addTopicsByTest(topics);
+    		return ResponseEntity.ok(addedTests);
+    	}catch(Exception e) {
+    		return ResponseEntity.badRequest().body(e.getMessage());
+    	}
+    }
+
+
 
 }

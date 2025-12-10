@@ -1,5 +1,6 @@
 package com.projects.mockker.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,9 +31,29 @@ public class TestService {
 		return testRepo.saveAll(tests);
 	}
 
-
 	public List<TestTopicModel> getTopicsByTest(Long test) {								//---------------get topics by test
 		return topicRepo.findByTest(test);
+	}
+
+	public TestTopicModel addTopic(TestTopicModel topic) {								//---------------add topic by test
+		return  topicRepo.save(topic);
+	}
+	
+	public List<TestTopicModel> addTopicsByTest(List<TestTopicModel> topics) {				//-------------- add multiple topics by test
+		List<TestTopicModel> savedTopics=new ArrayList<>();
+		for(TestTopicModel topic: topics) {
+			try {
+				if(topicRepo.existsByTopic(topic.getTopic())) {
+					continue;
+				}else {
+					savedTopics.add(topicRepo.save(topic));
+				}
+				
+			}catch(Exception e) {
+				
+			}
+		}
+		return savedTopics;
 	}
 
 }
