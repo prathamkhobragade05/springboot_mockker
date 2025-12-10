@@ -58,15 +58,30 @@ public class OtpEmailService {
 	}
 
 	public Boolean sendPassword(String email,String Password) {
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(email);
-		message.setSubject("Request For Password!");
-		message.setText("Your password is: "+Password);
-		mailSender.send(message);
-		return true;
+		Email from = new Email("yourverifiedemail@example.com");
+        String subject = "Request For Password!";
+        Email to = new Email(toEmail);
+		Content content = new Content("Your password is: "+Password);
+        Mail mail = new Mail(from, subject, to, content);
+
+        SendGrid sg = new SendGrid(sendGridApiKey);
+        Request request = new Request();
+
+		try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            Response response = sg.api(request);
+
+            System.out.println("Status Code: " + response.getStatusCode());
+            System.out.println("Body: " + response.getBody());
+			return true
+
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+			return false;
+        }
 		
 	}
-	
-	
-
 }
