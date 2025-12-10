@@ -15,8 +15,8 @@ import com.projects.mockker.model.UserModel;
 
 @Service
 public class OtpEmailService {
-	@Autowired
-	private JavaMailSender mailSender;
+	@Value("${sendgrid.api.key}")
+    private String sendGridApiKey;
 	
 	private Map<String,String> otpStorage=new HashMap<>();
 
@@ -28,11 +28,29 @@ public class OtpEmailService {
 	
 	@Async
 	public void sendEmailOtp(String email, String otp) {											//---------------send OTP Email
-		SimpleMailMessage message = new SimpleMailMessage();
-		message.setTo(email);
-		message.setSubject("OTP Verification");
-		message.setText("Yout OTP is: "+otp);
-		mailSender.send(message);
+		Email from = new Email("yourverifiedemail@example.com");
+        String subject = "Mockker";
+        Email to = new Email(toEmail);
+		Content content = new Content("text/plain", "Your OTP is: " + otp);
+        Mail mail = new Mail(from, subject, to, content);
+
+        SendGrid sg = new SendGrid(sendGridApiKey);
+        Request request = new Request();
+
+		try {
+            request.setMethod(Method.POST);
+            request.setEndpoint("mail/send");
+            request.setBody(mail.build());
+
+            Response response = sg.api(request);
+
+            System.out.println("Status Code: " + response.getStatusCode());
+            System.out.println("Body: " + response.getBody());
+            System.out.println("Headers: " + response.getHeaders());
+
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 	}
 
 	public boolean verifyOtp(String email, String otp) {											//---------------verify OTP
