@@ -1,22 +1,26 @@
 package com.projects.mockker.service;
 
+import java.io.IOException;
 import java.util.HashMap;
+
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.mail.SimpleMailMessage;
-import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
-import com.projects.mockker.model.UserModel;
+
+import com.sendgrid.*;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 
 @Service
 public class OtpEmailService {
-	@Value("${sendgrid.api.key}")
-    private String sendGridApiKey;
+
+//	@Value("${SENDGRID_API}")
+//    private String sendGridApiKey;
+    private String sendGridApiKey=;${SENDGRID_API};
 	
 	private Map<String,String> otpStorage=new HashMap<>();
 
@@ -28,9 +32,9 @@ public class OtpEmailService {
 	
 	@Async
 	public void sendEmailOtp(String email, String otp) {											//---------------send OTP Email
-		Email from = new Email("yourverifiedemail@example.com");
+		Email from = new Email("mailservice.softara@gmail.com");
         String subject = "Mockker";
-        Email to = new Email(toEmail);
+        Email to = new Email(email);
 		Content content = new Content("text/plain", "Your OTP is: " + otp);
         Mail mail = new Mail(from, subject, to, content);
 
@@ -58,30 +62,35 @@ public class OtpEmailService {
 	}
 
 	public Boolean sendPassword(String email,String Password) {
-		Email from = new Email("yourverifiedemail@example.com");
-        String subject = "Request For Password!";
-        Email to = new Email(toEmail);
-		Content content = new Content("Your password is: "+Password);
-        Mail mail = new Mail(from, subject, to, content);
-
-        SendGrid sg = new SendGrid(sendGridApiKey);
-        Request request = new Request();
-
+		Email from = new Email("mailservice.softara@gmail.com");
+		String subject = "Mockker";
+	    Email to = new Email(email);
+		Content content = new Content("text/plain", "Your password is: \"+Password");
+	    Mail mail = new Mail(from, subject, to, content);
+	
+	    SendGrid sg = new SendGrid(sendGridApiKey);
+	    Request request = new Request();
+	
 		try {
-            request.setMethod(Method.POST);
-            request.setEndpoint("mail/send");
-            request.setBody(mail.build());
-
-            Response response = sg.api(request);
-
-            System.out.println("Status Code: " + response.getStatusCode());
-            System.out.println("Body: " + response.getBody());
+	        request.setMethod(Method.POST);
+	        request.setEndpoint("mail/send");
+	        request.setBody(mail.build());
+	
+	        Response response = sg.api(request);
+	
+	        System.out.println("Status Code: " + response.getStatusCode());
+	        System.out.println("Body: " + response.getBody());
+	        System.out.println("Headers: " + response.getHeaders());
 			return true;
-
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+	
+	    } catch (Exception e) {
+	    	System.out.println(e.getMessage());
 			return false;
-        }
+
+	    }
 		
 	}
+	
+	
+
 }
