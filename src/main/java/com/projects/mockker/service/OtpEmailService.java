@@ -20,7 +20,7 @@ public class OtpEmailService {
 
 //	@Value("${SENDGRID_API}")
 //    private String sendGridApiKey;
-    private String sendGridApiKey=;${SENDGRID_API};
+    private String sendGridApiKey=${SENDGRID_API};
 	
 	private Map<String,String> otpStorage=new HashMap<>();
 
