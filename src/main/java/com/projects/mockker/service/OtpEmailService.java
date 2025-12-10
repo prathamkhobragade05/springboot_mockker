@@ -76,7 +76,7 @@ public class OtpEmailService {
 
             System.out.println("Status Code: " + response.getStatusCode());
             System.out.println("Body: " + response.getBody());
-			return true
+			return true;
 
         } catch (IOException ex) {
             throw new RuntimeException(ex);
