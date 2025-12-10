@@ -17,11 +17,9 @@ import com.sendgrid.helpers.mail.objects.Email;
 
 @Service
 public class OtpEmailService {
+	@Value("${SENDGRID_API}")
+	private String sendGridApiKey;
 
-//	@Value("${SENDGRID_API}")
-//    private String sendGridApiKey;
-    private String sendGridApiKey=${SENDGRID_API};
-	
 	private Map<String,String> otpStorage=new HashMap<>();
 
 	public String generateOtp(String email) {											//---------------generate OTP
