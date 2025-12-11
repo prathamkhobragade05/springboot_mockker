@@ -63,7 +63,7 @@ public class OtpEmailService {
 		Email from = new Email("mailservice.softara@gmail.com");
 		String subject = "Mockker";
 	    Email to = new Email(email);
-		Content content = new Content("text/plain", "Your password is: \"+Password");
+		Content content = new Content("text/plain", "Your password is: "+Password);
 	    Mail mail = new Mail(from, subject, to, content);
 	
 	    SendGrid sg = new SendGrid(sendGridApiKey);
