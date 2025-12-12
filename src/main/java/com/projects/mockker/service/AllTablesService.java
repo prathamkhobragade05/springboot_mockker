@@ -13,16 +13,16 @@ public class AllTablesService {
     @Autowired private ResultRepository resultRepository;
     @Autowired private TestRepository testRepository;
     @Autowired private TestTopicRepository testTopicRepository;
-    @Autowired private UserRepository userRepository;
+//    @Autowired private UserRepository userRepository;
 
-    public AllTables getAllTables() {
+    public AllTables getAllTables(Long userId) {
         AllTables all = new AllTables();
-
-        all.setQuestions(questionRepository.findAll());
-        all.setResults(resultRepository.findAll());
+        
         all.setTests(testRepository.findAll());
         all.setTopics(testTopicRepository.findAll());
-        all.setUsers(userRepository.findAll());
+        all.setQuestions(questionRepository.findAll());
+        all.setResults(resultRepository.findByUserIdOrderByDateTimeDesc(userId));
+//        all.setUsers(userRepository.findAll());
 
         return all;
     }
