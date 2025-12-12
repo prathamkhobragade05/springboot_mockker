@@ -6,8 +6,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.projects.mockker.service.OtpEmailService;
-import com.projects.mockker.service.QuestionService;
 import com.projects.mockker.service.UserService;
+import com.projects.mockker.model.CredentialModel;
 import com.projects.mockker.model.UserModel;
 
 @RestController
@@ -22,73 +22,68 @@ public class UserController {
 
 
 	@PostMapping("/login")											//---------------login via password
-	public Long login(@RequestBody UserModel user){
-		return userService.login(user.getEmail(), user.getPassword());
+	public Long login(@RequestBody CredentialModel credential ){
+		return userService.loginPassword(credential.getEmail(),credential.getOtp_password());
 	}
 	
-	@PostMapping("/login/forgetpass")
-	public Boolean sendPassword(@RequestParam("email") String email) {
-		if(userService.isExistsEmail(email)) {
-			UserModel user= userService.getUser(email);
-			return otpEmailService.sendPassword(email,user.getPassword());
+	@PostMapping("/login/forgetpass")										//---------------login forget password
+	public Boolean sendPassword(@RequestBody CredentialModel credential) {
+		if(userService.isExistsEmail(credential.getEmail())) {
+			UserModel user= userService.getUser(credential.getEmail());
+			return otpEmailService.sendPasswordLogin(credential.getEmail(),user.getPassword());
 		}else {
 			return false;
 		}
 	}
 	
 	@PostMapping("/login/send-otp")											//---------------login send OTP
-	public ResponseEntity<String> sendLoginOtp(@RequestParam("email") String email){
-		if(userService.isExistsEmail(email)) {
-			String otp = otpEmailService.generateOtp(email);
-			otpEmailService.sendEmailOtp(email, otp);
-			return ResponseEntity.ok("email sent to "+email);
+	public ResponseEntity<String> sendLoginOtp(@RequestBody CredentialModel credential){
+		if(userService.isExistsEmail(credential.getEmail())) {
+			String otp = otpEmailService.generateOtp(credential.getEmail());
+			otpEmailService.sendEmailOtp(credential.getEmail(), otp);
+			return ResponseEntity.ok("email sent to "+credential.getEmail());
 		}else {
 			return ResponseEntity.status(409).body("");
 		}
 	}
 	
 	@PostMapping("/login/verify-otp")											//---------------login verify OTP
-	public ResponseEntity<String> verifyLoginOtp(@RequestParam("email") String email, @RequestParam("otp") String otp) {
-		boolean isValid=otpEmailService.verifyOtp(email, otp);
-		return isValid? ResponseEntity.ok("Verified"):ResponseEntity.status(400).body("Invalid Otp");
+	public Long verifyLoginOtp(@RequestBody CredentialModel credential) {
+		return otpEmailService.verifyOtpLogin(credential.getEmail(),credential.getOtp_password());
 	}
 	
-	@PostMapping("/register")											//---------------register
-	public ResponseEntity<?> register(@RequestBody UserModel user){
-		try {
-			UserModel regsiteredUser = userService.registerUser(user);
-			return ResponseEntity.ok(regsiteredUser);
-		}
-		catch(Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
-
-		}
-	}
+	
+	//++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+	
 	
 	@PostMapping("/register/send-otp")											//---------------register send OTP
-	public ResponseEntity<String> sendRegisterOtp(@RequestParam("email") String email){
-		if(userService.isExistsEmail(email)) {
+	public ResponseEntity<String> sendRegisterOtp(@RequestBody CredentialModel credential){
+		if(userService.isExistsEmail(credential.getEmail())) {
 			return ResponseEntity.status(409).body("Email id already exsits");
 		}
-		String otp = otpEmailService.generateOtp(email);
-		otpEmailService.sendEmailOtp(email, otp);
+		String otp = otpEmailService.generateOtp(credential.getEmail());
+		otpEmailService.sendEmailOtp(credential.getEmail(), otp);
 		
 		return ResponseEntity.ok("otp sent");
 	}
 	
-	
 	@PostMapping("register/verify-otp")											//---------------register verify OTP
-	public ResponseEntity<String> verifyRegisterOtp(@RequestParam("email") String email, @RequestParam("otp") String otp) {
-		boolean isValid=otpEmailService.verifyOtp(email, otp);
+	public ResponseEntity<String> verifyRegisterOtp(@RequestBody CredentialModel credential) {
+		boolean isValid=otpEmailService.verifyOtpRegister(credential.getEmail(), credential.getOtp_password());
 		return isValid? ResponseEntity.ok("Verified"):ResponseEntity.status(400).body("Invalid Otp");
-		
 	}
 	
-	@GetMapping("")
-	public Long userLogin(@RequestParam("email") String email) {
-		return userService.userLogin(email);
+	@PostMapping("/register")											//---------------register
+	public Long register(@RequestBody UserModel user){
+		try {
+			UserModel registeredUser = userService.registerUser(user);
+			return registeredUser.getId();
+		}
+		catch(Exception e) {
+			System.out.println(ResponseEntity.badRequest().body(e.getMessage()));
+            return null;
+
+		}
 	}
-	
-	
 	
 }
