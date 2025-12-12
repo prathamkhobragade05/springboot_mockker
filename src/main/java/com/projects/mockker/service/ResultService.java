@@ -1,5 +1,6 @@
 package com.projects.mockker.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,24 @@ public class ResultService {
 
 	    return savedResult;
 	}
-
+	
+	public List<ResultModel> saveResults(List<ResultModel>  results){
+		List<ResultModel> savedResult=new ArrayList<>();
+		for(ResultModel result: results) {
+			try {
+				if(resultRepo.existsByTestIdAndDateTime(result.getUserId(),result.getDateTime())) {
+					continue;
+				}else {
+					result.setId(null);
+					resultRepo.save(result);
+				}
+			}catch(Exception e) {
+				System.out.println(e.getMessage());
+			}
+		}
+		return savedResult;
+		
+	}
 	
 	
 
