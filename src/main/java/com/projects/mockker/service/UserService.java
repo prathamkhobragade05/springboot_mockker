@@ -17,7 +17,8 @@ public class UserService {
 		return userRepo.existsByEmail(email);
 	}
 	
-	public Long login(String email,String password) {			//---------------login
+	public Long loginPassword(String email,String password) {			//---------------login via password
+		System.out.println(email+" "+password);
 		UserModel user= userRepo.findByEmail(email);
 		Long UserId=null;
 		if(user.getPassword().equals(password)) {
@@ -26,6 +27,12 @@ public class UserService {
 		return UserId;
 	}
 	
+	public Long LoginOtp(String email) {			//---------------login via OTP
+		UserModel user=userRepo.findByEmail(email);
+		if(user==null) return null;
+		Long userId=user.getId();
+		return userId;
+	}
 	
 	
 	public UserModel registerUser(UserModel user) throws Exception {			//---------------register
@@ -38,13 +45,6 @@ public class UserService {
 		return userRepo.save(user);
 	}
 
-	public Long userLogin(String email) {
-		UserModel user=userRepo.findByEmail(email);
-		if(user==null) return null;
-		Long userId=user.getId();
-		return userId;
-	}
-	
 	public UserModel getUser(String email) {
 		UserModel user =userRepo.findByEmail(email);
 		return user;
