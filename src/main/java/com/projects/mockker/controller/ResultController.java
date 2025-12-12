@@ -20,10 +20,20 @@ public class ResultController {
 	ResultRepository resultRepo;
 	
 	@PostMapping("")															//---------add result
-	public ResponseEntity<?> resutls(@RequestBody ResultModel result){
+	public ResponseEntity<?> result(@RequestBody ResultModel result){
 		try {
 			ResultModel resultModel=resultService.saveResult(result);
 			return ResponseEntity.ok(resultModel);
+		}catch(Exception e) {
+			return ResponseEntity.badRequest().body(e.getMessage());
+		}
+	}
+	
+	@PostMapping("/")															//---------add result
+	public ResponseEntity<?> results(@RequestBody List<ResultModel> results){
+		try {
+			List<ResultModel> addedResult=resultService.saveResults(results);
+			return ResponseEntity.ok(addedResult);
 		}catch(Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
