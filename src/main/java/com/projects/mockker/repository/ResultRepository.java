@@ -1,6 +1,7 @@
 package com.projects.mockker.repository;
 
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,6 @@ import com.projects.mockker.model.ResultModel;
 public interface ResultRepository extends JpaRepository<ResultModel, Long> {
 //    List<ResultModel> findByUserId(Long userId);
     List<ResultModel> findByUserIdOrderByDateTimeDesc(Long userId);
+    
+    boolean existsByTestIdAndDateTime(Long userId,LocalDateTime dateTime);
 }
