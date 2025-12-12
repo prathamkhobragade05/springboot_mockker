@@ -5,6 +5,7 @@ import java.util.HashMap;
 
 import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,13 @@ import com.sendgrid.helpers.mail.objects.Email;
 
 @Service
 public class OtpEmailService {
-	@Value("${SENDGRID_API}")
-	private String sendGridApiKey;
 
+	@Value("${SENDGRID_API}")
+   	private String sendGridApiKey;
+	
+	@Autowired
+	UserService userService;
+	
 	private Map<String,String> otpStorage=new HashMap<>();
 
 	public String generateOtp(String email) {											//---------------generate OTP
@@ -54,16 +59,26 @@ public class OtpEmailService {
             throw new RuntimeException(ex);
         }
 	}
+	
+	public Long verifyOtpLogin(String email, String otp) {											//---------------verify OTP
+		boolean isValid=otp.equals(otpStorage.get(email));
+		if(isValid) {
+			Long userId=userService.LoginOtp(email);
+			return userId;
+		}else {
+			return null;
+		}
+	}
 
-	public boolean verifyOtp(String email, String otp) {											//---------------verify OTP
+	public boolean verifyOtpRegister(String email, String otp) {											//---------------verify OTP
 		return otp.equals(otpStorage.get(email))? true:false;
 	}
 
-	public Boolean sendPassword(String email,String Password) {
+	public Boolean sendPasswordLogin(String email,String Password) {
 		Email from = new Email("mailservice.softara@gmail.com");
 		String subject = "Mockker";
 	    Email to = new Email(email);
-		Content content = new Content("text/plain", "Your password is: "+Password);
+		Content content = new Content("text/plain", "Your password is:"+Password);
 	    Mail mail = new Mail(from, subject, to, content);
 	
 	    SendGrid sg = new SendGrid(sendGridApiKey);
