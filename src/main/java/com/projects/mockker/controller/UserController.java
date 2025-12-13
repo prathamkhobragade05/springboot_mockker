@@ -25,7 +25,7 @@ public class UserController {
 	public Long login(@RequestBody CredentialModel credential ){
 		Long userId=userService.loginPassword(credential.getEmail(),credential.getOtp_password());
 		if(userId==null){
-			return 0;
+			return 0L;
 		}
 		return userId;
 	}
