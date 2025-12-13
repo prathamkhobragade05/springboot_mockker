@@ -27,7 +27,7 @@ public class UserController {
 		if(userId==null){
 			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 		}
-		return ResponseEntity.ok(user.getId());
+		return ResponseEntity.ok(userId);
 	}
 	
 	@PostMapping("/login/forgetpass")										//---------------login forget password
