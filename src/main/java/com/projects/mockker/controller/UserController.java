@@ -3,7 +3,7 @@ package com.projects.mockker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.*;    
 
 import com.projects.mockker.service.OtpEmailService;
 import com.projects.mockker.service.UserService;
@@ -22,12 +22,12 @@ public class UserController {
 
 
 	@PostMapping("/login")											//---------------login via password
-	public ResponseEntity<Long> login(@RequestBody CredentialModel credential ){
+	public Long login(@RequestBody CredentialModel credential ){
 		Long userId=userService.loginPassword(credential.getEmail(),credential.getOtp_password());
 		if(userId==null){
-			return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+			return 0;
 		}
-		return ResponseEntity.ok(userId);
+		return userId;
 	}
 	
 	@PostMapping("/login/forgetpass")										//---------------login forget password
