@@ -20,7 +20,7 @@ public class UserService {
 	public Long loginPassword(String email,String password) {			//---------------login via password
 		System.out.println(email+" "+password);
 		UserModel user= userRepo.findByEmail(email);
-		Long UserId=null;
+		Long UserId=0l;
 		if(user.getPassword().equals(password)) {
 			UserId=user.getId();
 		}
