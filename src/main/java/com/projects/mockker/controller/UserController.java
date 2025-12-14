@@ -22,12 +22,14 @@ public class UserController {
 
 
 	@PostMapping("/login")											//---------------login via password
-	public Long login(@RequestBody CredentialModel credential ){
-		Long userId=userService.loginPassword(credential.getEmail(),credential.getOtp_password());
-		if(userId==null){
-			return 0L;
+	public ResponseEntity<?> login(@RequestBody CredentialModel credential ){
+		boolean isUserExist=userService.isExistsEmail(credential.getEmail());
+		if(!isUserExist) {
+			return ResponseEntity.status(101).body(-1L);
+		}else {
+			Long userId=userService.loginPassword(credential.getEmail(), credential.getOtp_password());
+			return ResponseEntity.ok(userId);
 		}
-		return userId;
 	}
 	
 	@PostMapping("/login/forgetpass")										//---------------login forget password
