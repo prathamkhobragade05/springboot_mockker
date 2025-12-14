@@ -22,13 +22,13 @@ public class UserController {
 
 
 	@PostMapping("/login")											//---------------login via password
-	public ResponseEntity<?> login(@RequestBody CredentialModel credential ){
+	public Long login(@RequestBody CredentialModel credential ){
 		boolean isUserExist=userService.isExistsEmail(credential.getEmail());
 		if(!isUserExist) {
-			return ResponseEntity.status(101).body(-1L);
+			return -1l;
 		}else {
 			Long userId=userService.loginPassword(credential.getEmail(), credential.getOtp_password());
-			return ResponseEntity.ok(userId);
+			return userId;
 		}
 	}
 	
