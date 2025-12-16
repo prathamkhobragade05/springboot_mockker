@@ -40,7 +40,7 @@ public class ResultService {
 		List<ResultModel> savedResult=new ArrayList<>();
 		for(ResultModel result: results) {
 			try {
-				if(resultRepo.existsByTestIdAndDateTime(result.getUserId(),result.getDateTime())) {
+				if(resultRepo.existsByUserIdAndDateTime(result.getUserId(),result.getDateTime())) {
 					continue;
 				}else {
 					result.setId(null);
