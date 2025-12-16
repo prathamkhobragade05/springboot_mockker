@@ -30,9 +30,9 @@ public class ResultController {
 	}
 	
 	@PostMapping("/")															//---------add result
-	public ResponseEntity<?> results(@RequestBody List<ResultModel> results){
+	public ResponseEntity<?> results(@RequestBody List<ResultModel> resultss){
 		try {
-			resultService.saveResults(results);
+			resultService.saveResults(resultss);
 			return ResponseEntity.ok("");
 		}catch(Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
