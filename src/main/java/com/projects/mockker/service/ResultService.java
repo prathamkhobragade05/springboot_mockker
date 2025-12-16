@@ -36,21 +36,16 @@ public class ResultService {
 	    return savedResult;
 	}
 	
-	public List<ResultModel> saveResults(List<ResultModel>  results){
+	public void saveResults(Long userId,List<ResultModel>  results){								//---------------save result
 		List<ResultModel> savedResult=new ArrayList<>();
-		for(ResultModel result: results) {
-			try {
-				if(resultRepo.existsByUserIdAndDateTime(result.getUserId(),result.getDateTime())) {
-					continue;
-				}else {
-					result.setId(null);
-					resultRepo.save(result);
-				}
-			}catch(Exception e) {
-				System.out.println(e.getMessage());
-			}
+		try{
+			resultRepo.deleteAllByUserId(userId);
+			resultRepo.saveAll(results);
 		}
-		return savedResult;
+		catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		// return savedResult;
 		
 	}
 	
