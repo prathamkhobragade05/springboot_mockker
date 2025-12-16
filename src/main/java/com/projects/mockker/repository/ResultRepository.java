@@ -15,4 +15,7 @@ public interface ResultRepository extends JpaRepository<ResultModel, Long> {
     List<ResultModel> findByUserIdOrderByDateTimeDesc(Long userId);
     
     boolean existsByTestIdAndDateTime(Long userId,LocalDateTime dateTime);
+
+    void deleteAllByUserId(Long userId);
+
 }
