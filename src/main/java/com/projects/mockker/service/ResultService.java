@@ -39,8 +39,15 @@ public class ResultService {
 	public void saveResults(Long userId,List<ResultModel>  results){								//---------------save result
 		List<ResultModel> savedResult=new ArrayList<>();
 		try{
-			resultRepo.deleteAllByUserId(userId);
-			resultRepo.saveAll(results);
+			//resultRepo.deleteAllByUserId(userId);
+			for(ResultModel result: results){
+				try{
+					resultRepo.save(result);
+				}catch(Exception e){
+					System.out.println(e.getMessage());
+				}
+			}
+			// resultRepo.saveAll(results);
 		}
 		catch(Exception e){
 			System.out.println(e.getMessage());
