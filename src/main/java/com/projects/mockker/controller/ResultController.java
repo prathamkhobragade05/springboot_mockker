@@ -33,7 +33,7 @@ public class ResultController {
 	public ResponseEntity<?> results(@RequestBody List<ResultModel> results){
 		try {
 			resultService.saveResults(results);
-			return ResponseEntity.ok(addedResult);
+			return ResponseEntity.ok("");
 		}catch(Exception e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
