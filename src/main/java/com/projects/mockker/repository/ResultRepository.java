@@ -11,11 +11,13 @@ import com.projects.mockker.model.ResultModel;
 
 @Repository
 public interface ResultRepository extends JpaRepository<ResultModel, Long> {
-//    List<ResultModel> findByUserId(Long userId);
     List<ResultModel> findByUserIdOrderByDateTimeDesc(Long userId);
     
-    boolean existsByTestIdAndDateTime(Long userId,LocalDateTime dateTime);
+    boolean existsByUserIdAndDateTime(Long userId,LocalDateTime dateTime);
 
-    void deleteAllByUserId(Long userId);
+	List<ResultModel> findAllByUserId(Long userId);
+
+	void deleteAllByUserId(Long userId);
+
 
 }
