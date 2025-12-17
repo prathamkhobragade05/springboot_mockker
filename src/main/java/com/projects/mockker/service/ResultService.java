@@ -38,7 +38,7 @@ public class ResultService {
 	}
 	@Transactional
 	public void saveResults(List<ResultModel>  results){								//---------------save result
-		Long userId=results.getFirst().getUserId()
+		Long userId=results.getFirst().getUserId();
 		
 		try {
 			List<ResultModel> availableResults=resultRepo.findAllByUserId(userId);
