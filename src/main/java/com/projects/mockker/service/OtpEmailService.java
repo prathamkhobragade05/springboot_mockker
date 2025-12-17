@@ -60,14 +60,9 @@ public class OtpEmailService {
         }
 	}
 	
-	public Long verifyOtpLogin(String email, String otp) {											//---------------verify OTP
-		boolean isValid=otp.equals(otpStorage.get(email));
-		if(isValid) {
-			Long userId=userService.LoginOtp(email);
-			return userId;
-		}else {
-			return null;
-		}
+	public boolean verifyOtpLogin(String email, String otp) {											//---------------verify OTP
+		return otp.equals(otpStorage.get(email));
+
 	}
 
 	public boolean verifyOtpRegister(String email, String otp) {											//---------------verify OTP
