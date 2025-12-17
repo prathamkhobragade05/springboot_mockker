@@ -17,21 +17,26 @@ public class UserService {
 		return userRepo.existsByEmail(email);
 	}
 	
-	public Long loginPassword(String email,String password) {			//---------------login via password
-		System.out.println(email+" "+password);
+	public UserModel loginPassword(String email,String password) {			//---------------login via password
 		UserModel user= userRepo.findByEmail(email);
-		Long UserId=0l;
+//		Long UserId=0L;
 		if(user.getPassword().equals(password)) {
-			UserId=user.getId();
+//			UserId=user.getId();
+			return user;
 		}
-		return UserId;
+		else {
+			user.setId(0L);
+			return user;
+		}
 	}
 	
-	public Long LoginOtp(String email) {			//---------------login via OTP
+	public UserModel LoginOtp(String email) {			//---------------login via OTP
 		UserModel user=userRepo.findByEmail(email);
-		if(user==null) return null;
-		Long userId=user.getId();
-		return userId;
+		if(user!=null) {
+			return user;
+		}else {
+			return null;
+		}
 	}
 	
 	
