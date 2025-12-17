@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.projects.mockker.model.ResultModel;
 import com.projects.mockker.repository.ResultRepository;
@@ -35,25 +36,23 @@ public class ResultService {
 
 	    return savedResult;
 	}
-	
-	public void saveResults(Long userId,List<ResultModel>  results){								//---------------save result
-		List<ResultModel> savedResult=new ArrayList<>();
-		try{
-			//resultRepo.deleteAllByUserId(userId);
-			for(ResultModel result: results){
-				try{
-					resultRepo.save(result);
-				}catch(Exception e){
-					System.out.println(e.getMessage());
-				}
-			}
-			// resultRepo.saveAll(results);
+	@Transactional
+	public void saveResults(List<ResultModel>  results){								//---------------save result
+		Long userId=results.getFirst().getUserId()
+		
+		try {
+			List<ResultModel> availableResults=resultRepo.findAllByUserId(userId);
+			if(!availableResults.isEmpty()) 
+				resultRepo.deleteAll(availableResults);
+			else
+				System.out.println("\t\t\t"+userId+":   result list is empty!");
 		}
-		catch(Exception e){
+		catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
-		// return savedResult;
-		
+		finally {
+			resultRepo.saveAll(results);
+		}
 	}
 	
 	
