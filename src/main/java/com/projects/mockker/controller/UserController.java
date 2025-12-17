@@ -3,7 +3,7 @@ package com.projects.mockker.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;    
+import org.springframework.web.bind.annotation.*;
 
 import com.projects.mockker.service.OtpEmailService;
 import com.projects.mockker.service.UserService;
@@ -22,13 +22,16 @@ public class UserController {
 
 
 	@PostMapping("/login")											//---------------login via password
-	public Long login(@RequestBody CredentialModel credential ){
+	public UserModel login(@RequestBody CredentialModel credential ){
+		System.out.println("login via pass");
+		UserModel user= new UserModel();
 		boolean isUserExist=userService.isExistsEmail(credential.getEmail());
 		if(!isUserExist) {
-			return -1l;
+			user.setId(-1L);
+			return user;
 		}else {
-			Long userId=userService.loginPassword(credential.getEmail(), credential.getOtp_password());
-			return userId;
+			user=userService.loginPassword(credential.getEmail(), credential.getOtp_password());
+			return user;
 		}
 	}
 	
@@ -54,8 +57,17 @@ public class UserController {
 	}
 	
 	@PostMapping("/login/verify-otp")											//---------------login verify OTP
-	public Long verifyLoginOtp(@RequestBody CredentialModel credential) {
-		return otpEmailService.verifyOtpLogin(credential.getEmail(),credential.getOtp_password());
+	public UserModel verifyLoginOtp(@RequestBody CredentialModel credential) {
+		UserModel user=new UserModel();
+		boolean isValid= otpEmailService.verifyOtpLogin(credential.getEmail(),credential.getOtp_password());
+		if(isValid) {
+			user=userService.LoginOtp(credential.getEmail());
+			return user;
+		}else {
+			user.setId(0L);
+			return user;
+		}
+		
 	}
 	
 	
@@ -80,10 +92,10 @@ public class UserController {
 	}
 	
 	@PostMapping("/register")											//---------------register
-	public Long register(@RequestBody UserModel user){
+	public UserModel register(@RequestBody UserModel user){
 		try {
 			UserModel registeredUser = userService.registerUser(user);
-			return registeredUser.getId();
+			return registeredUser;
 		}
 		catch(Exception e) {
 			System.out.println(ResponseEntity.badRequest().body(e.getMessage()));
